@@ -27,7 +27,7 @@ function fakultefonk() {
     <label for="Fakülte">Fakülte Seçin</label>
   
 	<select onchange="fakultefonk();" id="fakulteid" class="form-control">
-
+	<option value=""></option>
 <?php
 include 'mysqlconfig.php';
 
