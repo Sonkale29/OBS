@@ -5,6 +5,20 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.btn {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
+}
+</style>
 <script>
 function fakultefonk() {
    var fakulteidsi = $('#fakulteid option:selected').val()
@@ -17,6 +31,35 @@ function fakultefonk() {
             $("#bolumid").html(data);
         },
     });
+}
+
+function bolumfonk() {
+   var bolumidsi = $('#bolumid option:selected').val()
+
+    $.ajax({
+        type: "POST",
+        url: "ogrencilist.php",
+        data: "bolumid=" + bolumidsi,
+		success: function (data) {
+            $("#ogrenciler").html(data);
+        },
+    });
+}
+
+function ogrenciAra(str) {
+  var xhttp;
+  if (str.length < 3) { 
+    document.getElementById("ogrenciler").innerHTML = "";
+    return;
+  }
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("ogrenciler").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "ogrenciara.php?q="+str, true);
+  xhttp.send();   
 }
 </script>
 </head>
@@ -40,19 +83,27 @@ while ($row = mysql_fetch_assoc($fakulteler)) {
 }
 ?>
 	</select>
-	</form>
 	</div>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<div class="form-group">
     <label for="Bolum">Bölüm Seçin</label>
-	<select onchange="" id="bolumid" class="form-control">
+	<select onchange="bolumfonk();" id="bolumid" class="form-control">
 	</select>
-	</form>
 	</div>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<form class="col-md-3 offset-md-3">
+		<div class="form-group">
+			<label for="ogrenciaramalab">Öğrenci Arama</label>
+			<input type="text" onkeyup="ogrenciAra(this.value)" class="form-control" id="ogrenciara" placeholder="Adı Soyadı">
+		</div>
+	</form>
 </div>
 </div>
-
-<div id="deneme">
+<div class="container-fluid">
+<div class="row">
+<div id="ogrenciler">
+</div>
+</div>
 </div>
 </body>
 </html>
