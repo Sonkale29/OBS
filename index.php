@@ -67,6 +67,21 @@ function ogrenciAra(str) {
   xhttp.open("GET", "ogrenciara.php?q="+str, true);
   xhttp.send();   
 }
+
+function sil() {
+	var result = confirm("Öğrenciyi silmek istediğinize emin misiniz?"); 
+            if (result == true) { 
+                var ogrenciidsi = $('#ogrenciid').val()
+
+				$.ajax({
+				type: "POST",
+				url: "ogrencisil.php",
+				data: "id=" + ogrenciidsi,
+				
+			});
+            }
+	
+}
 </script>
 </head>
 <body>
