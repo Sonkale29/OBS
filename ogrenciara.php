@@ -17,6 +17,7 @@ echo '<table class="table table-hover">
       <th scope="col">Adı Soyadı</th>
       <th scope="col">Sınıfı</th>
 	  <th scope="col">TC Kimlik Numarası</th>
+	  <th scope="col">İşlemler</th>
     </tr>
   </thead>
   <tbody>';
@@ -28,6 +29,7 @@ while ($row = mysql_fetch_assoc($ogrenciler)) {
 	echo '<td>'.$row['ogrenci_adi'].'</td>';
 	echo '<td>'.$row['sinif'].'</td>';
 	echo '<td>'.$row['tc_numara'].'</td>';
+	echo '<td><button class="btn" value="'.$row['id'].'"><i class="fa fa-refresh"></i></button> <button class="btn"  value="'.$row['id'].'"><i class="fa fa-trash"></i></button></td>';
 	$i++;
 }
 }

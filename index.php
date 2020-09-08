@@ -14,6 +14,12 @@
   cursor: pointer;
 }
 
+.pad {
+	margin-top: 40px;
+	margin-bottom: 40px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
 /* Darker background on mouse-over */
 .btn:hover {
   background-color: RoyalBlue;
@@ -97,6 +103,9 @@ while ($row = mysql_fetch_assoc($fakulteler)) {
 			<input type="text" onkeyup="ogrenciAra(this.value)" class="form-control" id="ogrenciara" placeholder="Adı Soyadı">
 		</div>
 	</form>
+	
+	<a class="btn btn-primary btn-sm pad" href="./ogrenciekle.php" target="_blank" role="button">Yeni Öğrenci Ekle</a>
+	
 </div>
 </div>
 <div class="container-fluid">
