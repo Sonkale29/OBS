@@ -1,5 +1,6 @@
 <?php
-if(isset($_POST['name'])){
+if(isset($_POST['id'])){
+	$ogrenciid = $_POST['id'];
 	$ogrenciad = $_POST['name'];
 	$fakulteid = $_POST['fakulteid'];
 	switch ($fakulteid) {
@@ -24,7 +25,7 @@ if(isset($_POST['name'])){
 		case 7:
 		$fakulteadi = "GÜZEL SANATLAR FAKÜLTESİ";
 		break;
-}
+	}
 	$bolumid = $_POST['bolumid'][0];
 	switch ($bolumid) {
 		case 1:
@@ -75,36 +76,32 @@ if(isset($_POST['name'])){
 	$baglanti = @mysql_connect($server, $user, $pass);
 	mysql_set_charset('utf8', $baglanti);
 	$veritabani = @mysql_select_db($db, $baglanti);
-	$ogrenciekle = mysql_query("INSERT INTO ogrenciler (id, fakulte_id, fakulte_adi, ogrenci_numara, ogrenci_adi, tc_numara, sinif, bolum_id, bolum_adi) VALUES (NULL, '$fakulteid', '$fakulteadi', '$ogrnum', '$ogrenciad', '$tcnum', '$sinif', '$bolumid', '$bolumadi')");
+	$ogrenciekle = mysql_query("UPDATE ogrenciler SET id='$ogrenciid', fakulte_id='$fakulteid', fakulte_adi='$fakulteadi', ogrenci_numara='$ogrnum', ogrenci_adi= '$ogrenciad', tc_numara= '$tcnum', sinif= '$sinif', bolum_id='$bolumid' ,bolum_adi='$bolumadi' WHERE id = $ogrenciid");
 	if (!$ogrenciekle) {
     die('ÖĞRENCİ EKLENEMEDİ. HATA KODU: ' . mysql_error());
+	}
+	exit;
 }
 
-	echo '<html>
-  <head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <style>
-  <style>
-.my-auto {
- margin-top: auto;
-margin-bottom: auto;
-}
-</style>
-  </style>
-  </head>
-  <body>
-  <div class="row h-100">
-   <div class="col-sm-12 my-auto">
-     <div class="">ÖĞRENCİ BAŞARIYLA EKLENDİ</div>
-   </div>
-</div>
-  <div>
-  <button type="button" class="btn btn-primary btn-lg" onclick="window.close()">Sayfayı Kapat</button>
-  </div>
-  </div>
-  </body>
-</html>';
-	exit;
+if(isset($_GET['id'])){
+	$ogrenciidsi = $_GET['id'];
+	include 'mysqlconfig.php';
+
+	$baglanti = @mysql_connect($server, $user, $pass);
+	mysql_set_charset('utf8', $baglanti);
+	$veritabani = @mysql_select_db($db, $baglanti);
+	$ogrencibul = mysql_query("SELECT * FROM ogrenciler WHERE id = $ogrenciidsi ");
+	while ($row = mysql_fetch_assoc($ogrencibul)) {
+		$ogrenciid = $row['id'];
+		$fakulteid = $row['fakulte_id'];
+		$fakulteadi = $row['fakulte_adi'];
+		$ogrencinum = $row['ogrenci_numara'];
+		$ogrenciadi = $row['ogrenci_adi'];
+		$tcnum = $row['tc_numara'];
+		$sinif = $row['sinif'];
+		$bolumid = $row['bolum_id'];
+		$bolumadi = $row['bolum_adi'];
+	}
 }
 ?>
 <html>
@@ -138,24 +135,25 @@ function reset() {
 <body>
 
 <div class="container">
-<form id="ogrenciekle" action="./ogrenciekle.php" method="post">
+<form id="ogrenciekle" action="./ogrenciduzenle.php" method="post">
 	<div class="col">
 	   <label for="adsoyad">Ad Soyad</label>
-      <input name="name" type="text" class="form-control col-md-6"  required />
+      <input name="name" type="text" class="form-control col-md-6" value="<?php echo $ogrenciadi;?>" required />
 	</div>
 	<div class="col">
 	   <label for="fakulte">Fakültesi</label>
     	<select onchange="fakultefonk();" id="fakulteid" class="form-control" name="fakulteid" required />
 		<option value=""></option>
 <?php
-include 'mysqlconfig.php';
 
-$baglanti = @mysql_connect($server, $user, $pass);
-mysql_set_charset('utf8', $baglanti);
-$veritabani = @mysql_select_db($db, $baglanti);
 $fakulteler = mysql_query('SELECT fakulte_adi, id FROM fakulteler');
 while ($row = mysql_fetch_assoc($fakulteler)) {
-    echo '<option value="'.$row['id'].'">'.$row['fakulte_adi']."</option>";
+	if($fakulteid == $row['id']){
+    echo '<option value="'.$row['id'].'" selected>'.$row['fakulte_adi']."</option>";
+	}
+	else{
+		echo '<option value="'.$row['id'].'">'.$row['fakulte_adi']."</option>";
+	}
 }
 ?>
 	</select>
@@ -163,25 +161,46 @@ while ($row = mysql_fetch_assoc($fakulteler)) {
 	<div class="col">
 	   <label for="bolum">Bölümü</label>
 		<select name="bolumid" id="bolumid" class="form-control" required />
+		<option value=""></option>
+<?php
+
+$bolumler = mysql_query("SELECT * FROM bolumler WHERE fakulte_id = $fakulteid ");
+while ($row = mysql_fetch_assoc($bolumler)) {
+	if($bolumid == $row['bolum_id']){
+    echo '<option value="'.$row['bolum_id'].','.$fakulteid.'" selected>'.$row['bolum_adi']."</option>";
+	}
+	else{
+		 echo '<option value="'.$row['bolum_id'].','.$fakulteid.'">'.$row['bolum_adi']."</option>";
+	}
+}
+?>
 		</select>
     </div>
 	<div class="col">
 	   <label for="tckimlik">TC Kimlik</label>
-      <input type="number" class="form-control col-md-6" id="tcnum" name="tcnum" placeholder="" required />
+      <input type="number" class="form-control col-md-6" id="tcnum" name="tcnum" value="<?php echo $tcnum;?>" required />
     </div>
 	<div class="col">
 	   <label for="okulno">Okul Numarası</label>
-      <input type="number" class="form-control col-md-6" id="okulno" name="okulno" placeholder="" required />
+      <input type="number" class="form-control col-md-6" id="okulno" name="okulno" value="<?php echo $ogrencinum;?>" required />
     </div>
 	<div class="col">
 	   <label for="sinif">Sınıf</label>
       <select name="sinif" id="sinif" class="form-control col-md-3" required />
-	  <option value="1">1</option>
-	  <option value="2">2</option>
-	  <option value="3">3</option>
-	  <option value="4">4</option>
+<?php
+for($i=1; $i<5; $i++){
+	if($sinif == $i){
+		echo '<option value="'.$i.'" selected>'.$i.'</option>';
+	}
+	else{
+	echo '<option value="'.$i.'">'.$i.'</option>';
+	}
+}
+?>
 	  </select>
     </div>
+	  <input type="hidden" id="id" name="id" value="<?php echo $ogrenciid;?>">
+
 	<div class="col-md-3 offset-md-9">
     <button type="submit" id="ogrencibut"class="btn btn-primary">Ekle</button><button type="button" class="btn btn-primary" onclick="reset()">Temizle</button>
 	</div>

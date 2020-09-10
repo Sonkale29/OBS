@@ -77,7 +77,9 @@ function sil() {
 				type: "POST",
 				url: "ogrencisil.php",
 				data: "id=" + ogrenciidsi,
-				
+				success: function () {
+					document.getElementById("ogrenciler").innerHTML = "";
+				},
 			});
             }
 	

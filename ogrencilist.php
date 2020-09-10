@@ -32,7 +32,7 @@ while ($row = mysql_fetch_assoc($ogrenciler)) {
 	echo '<td>'.$row['ogrenci_adi'].'</td>';
 	echo '<td>'.$row['sinif'].'</td>';
 	echo '<td>'.$row['tc_numara'].'</td>';
-	echo '<td><button class="btn" value="'.$row['id'].'"><i class="fa fa-refresh"></i></button> <button class="btn" id="ogrenciid" onclick="sil()" value="'.$row['id'].'"><i class="fa fa-trash"></i></button></td>';
+	echo '<td><button class="btn" onclick=" window.open(\'./ogrenciduzenle.php?id='.$row['id'].'\',\'_blank\')"><i class="fa fa-refresh"></i></button> <button class="btn"  value="'.$row['id'].'"><i class="fa fa-trash"></i></button></td>';
 	$i++;
 }
 }

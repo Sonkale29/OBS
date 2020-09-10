@@ -12,4 +12,5 @@ $veritabani = @mysql_select_db($db, $baglanti);
 $ogrencisil = mysql_query("DELETE FROM ogrenciler WHERE id=$ogrenciid");
 
 }
+
 ?>
