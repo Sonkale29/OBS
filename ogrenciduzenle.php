@@ -80,6 +80,7 @@ if(isset($_POST['id'])){
 	if (!$ogrenciekle) {
     die('ÖĞRENCİ EKLENEMEDİ. HATA KODU: ' . mysql_error());
 	}
+	
 	exit;
 }
 
